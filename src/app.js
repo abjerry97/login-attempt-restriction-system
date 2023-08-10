@@ -104,7 +104,7 @@ function getOrSetCache(key, cb) {
           return resolve(JSON.parse(data));
         }
         const freshData = await cb();
-        redisClient.setex(key, DEFAULT_EXPIRATION, JSON.stringify(freshData));
+        redisClient.set(key, DEFAULT_EXPIRATION, JSON.stringify(freshData));
         resolve(freshData); // Resolve with the fresh data
       })
       .catch((error) => {
