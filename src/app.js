@@ -15,8 +15,10 @@ app.use(cookieParser());
 
 const maxNumberOfFailedLogins = 3;
 const timeWindowForFailedLogins = 60 * 60 * 1;
-const redisClient = Redis.createClient({ host: "redis://red-cjab542683bs73b72t2g",
-  port: "6379"});
+const redisClient = Redis.createClient({
+  host: "rediss://red-cjab542683bs73b72t2g:Asbs5PIjiQsi5FssT0ZreOomXKqUpZlt@oregon-redis.render.com",
+  port: "6379",
+});
 redisClient.connect();
 app.get("/", (req, res) => {
   console.log(12121212);
@@ -83,7 +85,8 @@ app.post("/login", async (req, res) => {
   console.log("userAttempts", userAttempts);
   const comparePassword = await user.comparePassword(req.body.password);
   if (!comparePassword) {
-    if(userAttempts >=maxNumberOfFailedLogins) return res.json(`maxuimum number of login attempt exceeded`)
+    if (userAttempts >= maxNumberOfFailedLogins)
+      return res.json(`maxuimum number of login attempt exceeded`);
     await redisClient.set(
       JSON.stringify(user),
       ++userAttempts,
@@ -92,7 +95,7 @@ app.post("/login", async (req, res) => {
     );
     return res.json("wrong password");
   }
-  await redisClient.del(JSON.stringify(user))
+  await redisClient.del(JSON.stringify(user));
   res.send(user);
 });
 
@@ -119,7 +122,7 @@ function getOrSetCache(key, cb) {
   //       .then(async (data) => {
   //         if (data !== null) {
   //           return resolve(JSON.parse(data));
-  //         } 
+  //         }
   //         redisClient.setex(     key,
   //         ++userAttempts,
   //         "ex",
@@ -131,8 +134,6 @@ function getOrSetCache(key, cb) {
   //       });
   //   });
   // }
-
-
 }
 
 module.exports = app;
