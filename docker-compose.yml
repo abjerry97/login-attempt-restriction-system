@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306" 
+  
+  redis:
+    image: 'redis:latest'
+    container_name: express_redis
+    command: redis-server
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./storage/redis-data:/var/lib/redis
+    restart: always 
+
+  nodejs-app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - redis
