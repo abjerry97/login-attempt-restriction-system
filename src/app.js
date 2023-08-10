@@ -15,7 +15,8 @@ app.use(cookieParser());
 
 const maxNumberOfFailedLogins = 3;
 const timeWindowForFailedLogins = 60 * 60 * 1;
-const redisClient = Redis.createClient();
+const redisClient = Redis.createClient({ host: "redis://red-cjab542683bs73b72t2g",
+  port: "6379"});
 redisClient.connect();
 app.get("/", (req, res) => {
   console.log(12121212);
